@@ -15,7 +15,7 @@ class BundleTask extends DefaultTask {
 //		org.apache.felix.ipojo.manipulator.Pojoization pojo = new org.apache.felix.ipojo.manipulator.Pojoization()
 		org.apache.felix.ipojo.manipulator.Pojoization pojo = new ExtPojoization()
 		File jarfile = project.file(project.jar.archivePath)
-		File targetJarFile = project.file(project.jar.destinationDir.absolutePath +"/" +project.group+"."+ project.jar.baseName +"-"+project.version+ ".jar")
+		File targetJarFile = project.file(project.jar.destinationDir.absolutePath +"/" + project.jar.baseName +"-"+project.version+ "-bundle.jar")
 
 		if (!jarfile.exists()) throw new InvalidUserDataException("The specified bundle file does not exist: " + jarfile.absolutePath)
 
@@ -29,13 +29,14 @@ class BundleTask extends DefaultTask {
 
 //		pojo.getWarnings().each { s -> println s }
 		//
-		project.jar.baseName=project.group+"."+ project.jar.baseName
+		targetJarFile.renameTo(jarfile);
+//		project.jar.baseName=project.group+"."+ project.jar.baseName
 		
-		if (!jarfile.delete()) {
-//			if ( !targetJarFile.renameTo(project.file(project.group+"."+project.jar.archivePath)) ) {
-//				throw new InvalidUserDataException("Cannot rename the manipulated jar file");
-//			}
-			throw new InvalidUserDataException("Cannot delete the input jar file")
-		}  
+//		if (!jarfile.delete()) {
+////			if ( !targetJarFile.renameTo(project.file(project.group+"."+project.jar.archivePath)) ) {
+////				throw new InvalidUserDataException("Cannot rename the manipulated jar file");
+////			}
+//			throw new InvalidUserDataException("Cannot delete the input jar file")
+//		}
 	}
 }

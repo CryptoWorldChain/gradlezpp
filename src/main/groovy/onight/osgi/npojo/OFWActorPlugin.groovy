@@ -11,8 +11,11 @@ class OFWActorPlugin implements Plugin<Project> {
 		
 		
 		target.task('buildbundle',type:BundleTask)
-		
-	
+		target.task("deploy",type:DeployTask)
+
+		target.project.tasks.deploy.dependsOn("build")
+
+
 		//target.buildscript.dependencies.add(
 		if(target.hasProperty('repos_host')){
 			target.repositories {
@@ -45,7 +48,12 @@ class OFWActorPlugin implements Plugin<Project> {
         }
 		target.project.apply([ plugin: 'com.google.protobuf']);
 
-		
+
+		if(!target.jar.baseName.startsWith(target.project.group))
+		{
+			target.jar.baseName=target.project.group+"."+ target.project.jar.baseName
+		}
+
 		target.protobuf { protoc{ artifact = 'com.google.protobuf:protoc:3.6.1' } }
 
 		target.sourceSets.main
@@ -98,7 +106,7 @@ class OFWActorPlugin implements Plugin<Project> {
 			compile 'commons-codec:commons-codec:1.11'
 				
 				//!!!
-			compile 'onight.osgi:zpp-gradle_1.8:3.3.0'
+			compile 'onight.osgi:zpp-gradle_1.8:3.4.0'
 			
 			target.configurations.compile.extendsFrom(target.configurations.includeInJar)
 		}
@@ -117,7 +125,7 @@ class OFWActorPlugin implements Plugin<Project> {
 				attributes( 'Import-Lib': 'lib')
 			}
 		}
-		
+
 		
 		if(target.hasProperty('obr_host')){
 			target.uploadArchives  {
